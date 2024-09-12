@@ -10,6 +10,8 @@ import SwiftData
 
 struct TaskView: View {
     
+    let imgUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq9ttoFS2B9Ws8S-1Yk-HJcwthupTuY4yppQ&s"
+    
     @Binding var date: Date
     
     @Query private var tasks: [Task]
@@ -18,7 +20,6 @@ struct TaskView: View {
         
         let calendar = Calendar.current
         let startDate = calendar.startOfDay(for: date.wrappedValue)
-//        let endOfDate = calendar.date(byAdding: .day, value: 1, to: startDate)
         guard let endOfDate = calendar.date(byAdding: .day, value: 1, to: startDate) else {
                    fatalError("Unable to calculate endOfDate")
                }
@@ -48,14 +49,23 @@ struct TaskView: View {
                     }
             }
         })
-        .padding(.top)
+        .padding(.top, 400)
         .overlay {
             if tasks.isEmpty {
-                Text("No task's added")
-                    .font(.caption)
-                    .frame(width: 100)
+                VStack{
+                    AsyncImage(url: URL(string: imgUrl)) { image in image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                    } placeholder: {
+                        ProgressView()
+                    }
+                    Text("No task's added")
+                        .font(.caption)
+                        .frame(width: 100)
+                }
+                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity)
             }
-//            6.14
         }
     }
 }
